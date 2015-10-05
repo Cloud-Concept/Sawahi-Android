@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -33,15 +37,19 @@ public class MainActivity extends Activity {
 
 		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptEnabled(true);
+		settings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			if (0 != (getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE))
+			{ WebView.setWebContentsDebuggingEnabled(true); }
+		}
 
-		getActionBar().hide();
 
 		//Sandbox
-		webView.loadUrl("https://mobileapp-afzamobileapp.cs8.force.com/mobileapp/apex/MobileAppHomePage");
+//		webView.loadUrl("https://mobileapp-afzamobileapp.cs8.force.com/mobileapp/apex/MobileAppHomePage");
 		
 		//Production
-		//webView.loadUrl("https://afz.force.com/mobileapp/apex/MobileAppHomePage");
+		webView.loadUrl("https://afz.force.com/mobileapp/apex/MobileAppHomePage");
 	}
 
 	@Override
@@ -110,7 +118,10 @@ public class MainActivity extends Activity {
 			webView.setVisibility(View.INVISIBLE);
 			showNoInternetAlert();
 		}
-
+		@Override
+		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){
+			handler.proceed();
+		}
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			if (url.startsWith("tel:")) {
