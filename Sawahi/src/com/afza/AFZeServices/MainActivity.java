@@ -49,7 +49,10 @@ public class MainActivity extends Activity {
 //		webView.loadUrl("https://mobileapp-afzamobileapp.cs8.force.com/mobileapp/apex/MobileAppHomePage");
 		
 		//Production
-		webView.loadUrl("https://afz.force.com/mobileapp/apex/MobileAppHomePage");
+//		webView.loadUrl("https://afz.force.com/mobileapp/apex/MobileAppHomePage");
+
+		//Sandbox
+		webView.loadUrl("https://mobileapp-afzamobileapp.cs8.force.com/mobileapp/apex/MobileAppHomePage");
 	}
 
 	@Override
